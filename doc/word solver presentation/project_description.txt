@@ -1,0 +1,19 @@
+I would like to describe a personal project I undertook which I am very proud of. It was born from a conversation in a pub about computationally 'beating' a quiz machine. The machine concerned is an called an ITBox and can be found in many pubs in England; on it there is a game called "Puzzle Word". 
+
+The objective of this game is to find as many words as possible in a grid of letters in under two minutes. They are selected by touch screen and the letters are removed once used in a word.
+
+Determined to prove that a computational solution could be found I then embarked on designing and implementing a solution. Working entirely in my spare time this turned into an extremely challenging problem, spanning several technologies and requiring significant ingenuity. 
+
+I am pleased to report that after many months of work the result was a fully functioning 3203 line multi platform Java application. This allowed the user to start the game, take a photo of the screen on a bluetooth enabled mobile phone and have a solution displayed on the phone in under one minute. This was my target time, allowing one minute to enter the words into the ITBox.
+
+Critical to the success of the project was simplifying the complex problem into component parts and tackling them in manageable chunks. For this project I identified three subproblems, each with there own goals. I will discuss each one now:
+
+1. Image acquisition, transport and display. Given the time constraint of two minutes it was clear the full computing power of a laptop would be required. However this was impractical for the environment and so I adopted the bluetooth model where a mobile phone could be used to capture the screen and display the result. The bulk to the computation would then be done on a laptop. To realise this subtask I had to familiarise myself with J2ME (the Java environment for mobile phones) along with the bluetooth protocol. 
+    
+2. Optical character recognition. With an image of the ITBox screen on a laptop I had to develop a system to identify the grid of letters and convert it to a grid of characters. My masters degree had equipped me with knowledge of solutions to this problem. I researched existing solutions and was able to leverage the existing open source source Java Object Oriented Neural Engine (JOONE). 
+
+3. Solution generation. The final problem was taking the grid of letters and finding the best possible solution. For this I first built a computational model of the game. Next I needed of to find the chain of words which scored the most points, a problem which I split again. For efficiency I wrote a trie based data structure to store a dictionary in, then I could separately write a tree pruning search algorithm to find a solution against this dictionary interface.
+
+In each of these tasks I gained significant insight by discussing the problem with my friends and former university staff. To aid this I found it critical to specify the problem and solution for each step and then document my work's successes and failures. Being a spare time project the temptation was to 'hack away' without much regard for this, but it because apparent on a project of this size that was not feasible. 
+
+Naturally the project had no deadline other than my personal desire to see the project through and demonstrate it could be done. However in an ongoing project such as this it can be disheartening to have no end in sight. Again by dividing the project in to clear subtasks I was always able to set small goals to achieve in parallel. With this approach one can also always present working components and quickly identify problem areas which may require more time.
