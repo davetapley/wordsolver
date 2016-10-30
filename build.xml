@@ -1,19 +1,23 @@
 <project>
 
+  <!-- jars needed for compilation and runtime -->
   <path id="classpath">
     <fileset file="build/jar/avetanaBT.jar"/>
     <fileset file="src/neuralnet/joone-engine.jar"/>
   </path>
 
+  <!-- remove the build directory to start clean -->
   <target name="clean">
     <delete dir="build"/>
   </target>
 
-  <!-- remove so from avetanaBT.jar -->
+  <!-- check for existence of fixed avetanaBT.jar (.so removed) -->
   <target name="fixjar-check">
     <available file="build/jar/avetanaBT.jar" property="fixjar.avail"/>
   </target>
 
+  <!-- remove so from avetanaBT.jar so it can be loaded via
+       ld.library.path -->
   <target name="fixjar" depends="fixjar-check" unless="fixjar.avail">
     <mkdir dir="build/jar"/>
     <exec executable="cp">
@@ -27,6 +31,7 @@
     </exec>
   </target>
 
+  <!-- compile the java sources -->
   <target name="compile" depends="fixjar">
     <mkdir dir="build/classes"/>
     <javac
@@ -37,6 +42,7 @@
        />
   </target>
 
+  <!-- create the jar file to run from -->
   <target name="jar" depends="compile">
     <mkdir dir="build/jar"/>
     <jar destfile="build/jar/wordsolver.jar" basedir="build/classes">
@@ -57,6 +63,7 @@
     </java>
   </target>
 
+  <!-- run from build/classes directory -->
   <target name="run" depends="compile">
     <java
         classname="gui/Main"
