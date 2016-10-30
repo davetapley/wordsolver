@@ -1,0 +1,80 @@
+<project>
+
+  <!-- jars needed for compilation and runtime -->
+  <path id="classpath">
+    <fileset file="build/jar/avetanaBT.jar"/>
+    <fileset file="src/neuralnet/joone-engine.jar"/>
+  </path>
+
+  <!-- remove the build directory to start clean -->
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <!-- check for existence of fixed avetanaBT.jar (.so removed) -->
+  <target name="fixjar-check">
+    <available file="build/jar/avetanaBT.jar" property="fixjar.avail"/>
+  </target>
+
+  <!-- remove so from avetanaBT.jar so it can be loaded via
+       ld.library.path -->
+  <target name="fixjar" depends="fixjar-check" unless="fixjar.avail">
+    <mkdir dir="build/jar"/>
+    <exec executable="cp">
+      <arg value="lib/avetanaBT.jar"/>
+      <arg value="build/jar/avetanaBT.jar"/>
+    </exec>
+    <exec executable="zip">
+      <arg value="build/jar/avetanaBT.jar"/>
+      <arg value="-d"/>
+      <arg value="libavetanaBT.so"/>
+    </exec>
+  </target>
+
+  <!-- compile the java sources -->
+  <target name="compile" depends="fixjar">
+    <mkdir dir="build/classes"/>
+    <javac
+       compiler="modern"
+       srcdir="src"
+       destdir="build/classes"
+       classpathref="classpath"
+       />
+  </target>
+
+  <!-- create the jar file to run from -->
+  <target name="jar" depends="compile">
+    <mkdir dir="build/jar"/>
+    <jar destfile="build/jar/wordsolver.jar" basedir="build/classes">
+      <manifest>
+        <attribute name="Main-Class" value="gui/Main"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <!-- not working: java.lang.NoClassDefFoundError -->
+  <target name="run-jar" depends="jar">
+    <java
+       jar="build/jar/wordsolver.jar"
+       fork="true">
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <!-- run from build/classes directory -->
+  <target name="run" depends="compile">
+    <java
+        classname="gui/Main"
+        fork="true">
+      <sysproperty key="ld.library.path" value="src/comms/libavetanaBT.so"/>
+      <classpath>
+        <path refid="classpath"/>
+        <pathelement location="build/classes"/>
+        <pathelement location="src/comms/libavetanaBT.so"/>
+      </classpath>
+    </java>
+  </target>
+
+</project>
